@@ -17,16 +17,13 @@ pipeline {
     stage('Push to Docker Hub') {
       steps {
         script {
-          docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-            sh 'docker push $IMAGE'
+          withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            sh '''
+              echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+              docker push $IMAGE
+            '''
           }
         }
-      }
-    }
-
-    stage('Deploy to Kubernetes') {
-      steps {
-        sh 'kubectl set image deployment/todo-flask-app todo-flask-app=$IMAGE --record'
       }
     }
   }
