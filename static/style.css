@@ -1,0 +1,17 @@
+body {
+  font-family: sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.3s ease;
+}
+:root {
+  --bg: #f4f4f4;
+  --text: #333;
+}
+.dark-mode {
+  --bg: #1e1e1e;
+  --text: #f4f4f4;
+}
+.container { max-width: 600px; margin: auto; padding: 20px; }
+input[type=text] { width: 60%; padding: 5px; }
+.done input[type=text] { text-decoration: line-through; color: grey; }
