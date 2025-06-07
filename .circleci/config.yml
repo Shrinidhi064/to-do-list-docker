@@ -20,8 +20,8 @@ jobs:
           name: Check environment variables
           command: env | grep -i render || true
       - run:
-          name: List Render services
-          command: render-cli list
+          name: Try render-cli with debug logging
+          command: RENDER_LOG_LEVEL=DEBUG render-cli list || true
 workflows:
   version: 2
   build_and_deploy:
