@@ -29,13 +29,13 @@ jobs:
             echo "Listing services..."
             render-cli list || true
       - run:
-          name: Deploy to Render
+          name: Trigger deploy via Deploy Hook
           command: |
-            if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_SERVICE_ID" ]; then
-              echo "RENDER_API_KEY and/or RENDER_SERVICE_ID not set. Please set them in the render-deploy-context." && exit 1
+            if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+              echo "Missing RENDER_DEPLOY_HOOK_URL env variable." && exit 1
             fi
-            echo "Triggering deploy for service ID: $RENDER_SERVICE_ID"
-            RENDER_API_KEY=$RENDER_API_KEY render-cli deploy $RENDER_SERVICE_ID
+            echo "Triggering deploy via webhook..."
+            curl -X POST $RENDER_DEPLOY_HOOK_URL
 
 workflows:
   version: 2
