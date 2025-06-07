@@ -1,4 +1,5 @@
 version: 2.1
+
 jobs:
   python-build:
     docker:
@@ -8,6 +9,7 @@ jobs:
       - run:
           name: Install dependencies
           command: pip install render-cli
+
   deploy:
     docker:
       - image: cimg/python:3.9
@@ -20,8 +22,21 @@ jobs:
           name: Check environment variables
           command: env | grep -i render || true
       - run:
-          name: Try render-cli with debug logging
-          command: RENDER_LOG_LEVEL=DEBUG render-cli list || true
+          name: Show Render CLI version and list services
+          command: |
+            echo "Using Render CLI version:"
+            render-cli --version
+            echo "Listing services..."
+            render-cli list || true
+      - run:
+          name: Deploy to Render
+          command: |
+            if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_SERVICE_ID" ]; then
+              echo "RENDER_API_KEY and/or RENDER_SERVICE_ID not set. Please set them in the render-deploy-context." && exit 1
+            fi
+            echo "Triggering deploy for service ID: $RENDER_SERVICE_ID"
+            RENDER_API_KEY=$RENDER_API_KEY render-cli deploy $RENDER_SERVICE_ID
+
 workflows:
   version: 2
   build_and_deploy:
