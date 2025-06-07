@@ -31,11 +31,11 @@ jobs:
       - run:
           name: Trigger deploy via Deploy Hook
           command: |
-            if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
-              echo "Missing RENDER_DEPLOY_HOOK_URL env variable." && exit 1
+            if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+              echo "Missing RENDER_DEPLOY_HOOK env variable." && exit 1
             fi
             echo "Triggering deploy via webhook..."
-            curl -X POST $RENDER_DEPLOY_HOOK_URL
+            curl -X POST $RENDER_DEPLOY_HOOK
 
 workflows:
   version: 2
