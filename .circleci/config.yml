@@ -26,6 +26,6 @@ workflows:
     jobs:
       - python-build
       - deploy:
-          context: render-secrets
+          context: render-deploy-context
           requires:
             - python-build
