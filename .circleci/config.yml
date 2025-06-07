@@ -17,9 +17,14 @@ jobs:
           name: Install dependencies
           command: pip install render-cli
       - run:
-          name: Deploy with render-cli
+          name: Debug render-cli deployment
           command: |
-            render-cli deploy # Replace with your actual deploy arguments if needed
+            echo "Checking render-cli version..."
+            render-cli --version
+            echo "Listing available commands..."
+            render-cli --help
+            echo "Running render-cli deploy with debug output..."
+            render-cli deploy --debug # Add your actual deploy arguments here
 workflows:
   version: 2
   build_and_deploy:
