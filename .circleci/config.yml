@@ -21,7 +21,7 @@ jobs:
           command: render-cli --help
       - run:
           name: List render services
-          command: render-cli list --debug
+          command: render-cli list
 workflows:
   version: 2
   build_and_deploy:
