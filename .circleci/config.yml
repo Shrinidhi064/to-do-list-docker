@@ -10,6 +10,28 @@ jobs:
           name: Install dependencies
           command: pip install render-cli
 
+  docker-build-push:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker  # Required to build Docker images
+      - run:
+          name: Install Docker CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y docker.io
+      - run:
+          name: Docker Login
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+      - run:
+          name: Build and Push Docker Image
+          command: |
+            IMAGE_NAME=shrinidhi6/todo-flask-app:latest
+            docker build -t $IMAGE_NAME .
+            docker push $IMAGE_NAME
+
   deploy:
     docker:
       - image: cimg/python:3.9
@@ -42,7 +64,10 @@ workflows:
   build_and_deploy:
     jobs:
       - python-build
+      - docker-build-push:
+          requires:
+            - python-build
       - deploy:
           context: render-deploy-context
           requires:
-            - python-build
+            - docker-build-push
