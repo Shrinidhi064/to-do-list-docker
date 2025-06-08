@@ -26,9 +26,16 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y docker-ce docker-ce-cli containerd.io
       - run:
+          name: Debug DockerHub Environment Variables
+          command: |
+            echo "DOCKERHUB_USER: $DOCKERHUB_USER"
+            if [ -z "$DOCKERHUB_USER" ] || [ -z "$DOCKERHUB_PASS" ]; then
+              echo "DOCKERHUB_USER or DOCKERHUB_PASS not set" && exit 1
+            fi
+      - run:
           name: Docker Login
           command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+            echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USER" --password-stdin
       - run:
           name: Build and Push Docker Image
           command: |
